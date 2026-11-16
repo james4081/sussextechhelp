@@ -433,9 +433,9 @@
               <span>Phone</span>
             </a>
             
-            <a href="mailto:hello@sussextech.help" class="btn btn-secondary btn-lg">
+            <a href="mailto:hello@sussextech.help" id="email-btn" class="btn btn-secondary btn-lg" style="font-size:1rem">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-              <span>Email</span>
+              <span>hello@sussextech.help</span>
             </a>
           </div>
           <div class="hours-badge">
@@ -489,6 +489,16 @@
           }
         }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
         for (var k = 0; k < revealElements.length; k++) { observer.observe(revealElements[k]); }
+      }
+      var emailBtn = document.getElementById('email-btn');
+      if (emailBtn && navigator.clipboard) {
+        emailBtn.addEventListener('click', function () {
+          var label = emailBtn.querySelector('span');
+          navigator.clipboard.writeText('hello@sussextech.help').then(function () {
+            var old = label.textContent; label.textContent = 'Email copied';
+            setTimeout(function () { label.textContent = old; }, 2500);
+          }).catch(function () {});
+        });
       }
     })();
   </script>
