@@ -142,8 +142,9 @@
       background-color: var(--bg-surface);
       border-bottom: 1px solid var(--border-subtle);
       box-shadow: var(--shadow-sm);
-      transition: background-color var(--transition-smooth), border-color var(--transition-smooth);
+      transition: background-color var(--transition-smooth), border-color var(--transition-smooth), transform 0.3s ease;
     }
+    .site-header.is-hidden { transform: translateY(-100%); }
     .header-inner {
       display: flex; align-items: center; justify-content: space-between;
       gap: 0.75rem; min-height: 4.75rem; padding-top: 0.4rem; padding-bottom: 0.4rem;
@@ -403,7 +404,9 @@
         border-top: 1px solid var(--border-color);
         box-shadow: 0 -4px 18px rgba(15, 23, 42, 0.14);
         padding: 0.65rem 0.9rem calc(0.65rem + env(safe-area-inset-bottom, 0px));
+        transition: transform 0.3s ease;
       }
+      .mobile-sticky-bar.is-hidden { transform: translateY(110%); }
       .mobile-sticky-bar .btn {
         min-height: 50px;
         padding: 0.65rem 0.75rem;
@@ -770,6 +773,30 @@
           }).catch(function () {});
         });
       }
+
+      var header = document.querySelector('.site-header');
+      var bar = document.querySelector('.mobile-sticky-bar');
+      var lastY = window.pageYOffset, ticking = false;
+      function onScroll() {
+        var y = window.pageYOffset;
+        var menuOpen = primaryNav && primaryNav.classList.contains('is-open');
+        var nearBottom = (window.innerHeight + y) >= document.documentElement.scrollHeight - 80;
+        var hide = y > 120 && y > lastY + 4 && !menuOpen;
+        var show = y < lastY - 4 || y <= 120;
+        if (hide) {
+          if (header) header.classList.add('is-hidden');
+          if (bar) bar.classList.add('is-hidden');
+        } else if (show) {
+          if (header) header.classList.remove('is-hidden');
+          if (bar) bar.classList.remove('is-hidden');
+        }
+        if (nearBottom && bar) bar.classList.remove('is-hidden');
+        if (Math.abs(y - lastY) > 4) lastY = y;
+        ticking = false;
+      }
+      window.addEventListener('scroll', function () {
+        if (!ticking) { window.requestAnimationFrame(onScroll); ticking = true; }
+      }, { passive: true });
     })();
   </script>
 </body>
